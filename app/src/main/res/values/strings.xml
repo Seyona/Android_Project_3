@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Android_Project_3</string>
+    <string name="action_settings">Settings</string>
 
 
     <string-array name="JSON_URL_NAME">

@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
-        android:key="Selected_Website"
+        android:key="listPref"
         android:title="Web Sites"
         android:entries="@array/JSON_URL_NAME"
         android:entryValues="@array/JSON_URL"
