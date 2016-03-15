@@ -1,16 +1,20 @@
 package com.example.home.android_project_3;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 
 
 import java.io.IOException;
+import java.util.List;
 import java.util.prefs.PreferenceChangeListener;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 if (key.equals("listPref")) {
-                    //do magic
+
                 }
             }
         };
@@ -75,4 +79,6 @@ public class MainActivity extends AppCompatActivity {
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
+
+
 }
