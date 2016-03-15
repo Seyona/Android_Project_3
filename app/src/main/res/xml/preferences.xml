@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="Selected_Website"
+        android:title="Web Sites"
+        android:entries="@array/JSON_URL_NAME"
+        android:entryValues="@array/JSON_URL"
+        android:defaultValue="300"
+        />
+</PreferenceScreen>
