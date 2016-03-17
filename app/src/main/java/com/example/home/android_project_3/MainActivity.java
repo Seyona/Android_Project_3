@@ -28,15 +28,23 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
+            listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+                public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                    if (key.equals("listPref")) {
 
-        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                if (key.equals("listPref")) {
-
+                    }
                 }
-            }
-        };
-        prefs.registerOnSharedPreferenceChangeListener(listener);
+            };
+            prefs.registerOnSharedPreferenceChangeListener(listener);
+
+        if (isOnline()) {
+            // check for website connectivity
+
+        } else {
+            Log.e("Connection","No_Connection");
+        }
+
+
 
     }
 
