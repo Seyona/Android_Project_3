@@ -7,6 +7,11 @@
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar"/>
+    <Spinner
+        android:id="@+id/imageSipinner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+    </Spinner>
 
     <ImageView
         android:layout_width="match_parent"
