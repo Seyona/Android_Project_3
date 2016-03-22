@@ -18,6 +18,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,6 +31,7 @@ public class DownloadTask extends AsyncTask<String, Void, ArrayList<Pet>> {
     private static final int READ_THIS_AMOUNT = 8096;
     private static final String TAG = "DownloadTask";
     private static final int TIMEOUT = 1000;
+    public AsyncResponse resp = null;
 
     @Override
     protected ArrayList<Pet> doInBackground(String... params) {
@@ -114,8 +116,8 @@ public class DownloadTask extends AsyncTask<String, Void, ArrayList<Pet>> {
         }
 
         /*
-            Download pictures
-         */
+            Download pictures -- for now no need just return the list of pets
+
         for (Pet p: pets) {
             Bitmap myBitmap = null;
             try {
@@ -143,8 +145,13 @@ public class DownloadTask extends AsyncTask<String, Void, ArrayList<Pet>> {
 
 
 
-        }
+        }*/
         return pets;
+    }
+
+    @Override
+    protected void onPostExecute(ArrayList<Pet> result) {
+        resp.processFinish(result);
     }
 
     public static boolean saveProcessedImage(Bitmap bmp, String processedImagePath) {

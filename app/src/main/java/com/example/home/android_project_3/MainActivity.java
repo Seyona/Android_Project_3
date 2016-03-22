@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.preference.ListPreference;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -28,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.prefs.PreferenceChangeListener;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
     private static final boolean NO_NETWORK_ACCESS = false;
     private SharedPreferences prefs = null;
@@ -37,11 +40,13 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     private ImageView background;
     private ArrayList<Pet> pets;
+    private Integer connection_code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         background = (ImageView)findViewById(R.id.background);
 
@@ -55,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
             };
             prefs.registerOnSharedPreferenceChangeListener(listener);
 
+
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setVisibility(View.VISIBLE);
@@ -63,12 +70,20 @@ public class MainActivity extends AppCompatActivity {
 
         spinner = (Spinner)findViewById(R.id.imageSpinner);
 
+        connection_code = -1;
+        pets = new ArrayList<Pet>();
+
+
         if (!isOnline()) {
             // check for website connectivity
             // populate image view w/ default picture
             background.setImageResource(R.drawable.nointernet);
-            background.setScaleType(ImageView.ScaleType.FIT_XY);
-            Log.e("Connection","No_Connection");
+            /*background.setScaleType(ImageView.ScaleType.FIT_XY);
+                Commented out until tool bar is fixed
+            */
+            spinner.setPrompt("Default_No_Connection");
+            spinner.setSelection(0);
+            Log.e("Connection", "No_Connection");
         } else {
             Log.e("Connection","Connection");
             //populate with default preference selection
@@ -76,6 +91,56 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    }
+
+    /**
+     * Function sets up the field based on the preference set
+     * @param view
+     * @return true for successful setup, false otherwise
+     */
+    private boolean setup(View view)  {
+        String url = prefs.getString("listPref","");
+        if (url.equals("")) return false; //shouldn't happen
+
+        ConnectionCheckTask checkConnection = new ConnectionCheckTask();
+        checkConnection.resp = this;
+        checkConnection.execute(url);
+
+        if (checkConnection.resp != null) {
+            if (connection_code == -1) {
+                Log.e("Connection_Code", "Still -1 something went wrong");
+            } else {
+                if (connection_code != 200) {
+                    Toast.makeText(this,"Error could not reach page code " + connection_code + " was given", Toast.LENGTH_SHORT).show();
+                    return false;
+                } else {
+                    // connection is good
+                    DownloadTask download = new DownloadTask();
+                    download.resp = this;
+                    download.execute(url);
+
+                    if (pets.size() == 0) {
+                        Log.e("Pets", "There are no pets???");
+                    } else {
+                        String[] pet_names_array = new String[pets.size()];
+                        int index = 0;
+                        for (Pet p : pets) {
+                            pet_names_array[index] = p.name;
+                        }
+
+                        ArrayAdapter adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,pet_names_array);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        spinner.setAdapter(adapter);
+
+                    }
+
+                }
+            }
+        } else {
+            Log.e("PostExecute", "resp still null");
+        }
+
+        return true;
     }
 
     @Override
@@ -136,4 +201,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void processFinish(Integer output) {
+        this.connection_code = output;
+    }
+
+    @Override
+    public void processFinish(ArrayList<Pet> output) {
+
+        for (Pet p : output) {
+            pets.add(p);
+        }
+    }
 }

@@ -11,9 +11,10 @@
 
     <Spinner
         android:id="@+id/imageSpinner"
-        android:layout_width="50dp"
+        android:layout_width="125dp"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/toolbar">
+        android:layout_alignBottom="@+id/toolbar"
+        android:entries="@array/def">
     </Spinner>
 
     <ImageView

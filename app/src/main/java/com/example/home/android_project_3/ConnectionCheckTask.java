@@ -10,9 +10,10 @@ import java.net.URL;
 /**
  * Created by David on 3/17/16.
  */
-public class ConnectionCheckTask extends AsyncTask<String, Void, Boolean> {
+public class ConnectionCheckTask extends AsyncTask<String, Void, Integer> {
+    public AsyncResponse resp = null;
     @Override
-    protected Boolean doInBackground(String... params) {
+    protected Integer doInBackground(String... params) {
         URL url = null;
         int code = 0;
         try {
@@ -29,6 +30,11 @@ public class ConnectionCheckTask extends AsyncTask<String, Void, Boolean> {
         }
 
 
-        return code == 200;
+        return code;
+    }
+
+    @Override
+    protected void onPostExecute(Integer result) {
+        resp.processFinish(result);
     }
 }
