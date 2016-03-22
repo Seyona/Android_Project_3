@@ -1,5 +1,7 @@
 package com.example.home.android_project_3;
 
+import android.graphics.Bitmap;
+
 import java.util.ArrayList;
 
 /**
@@ -8,4 +10,5 @@ import java.util.ArrayList;
 public interface AsyncResponse {
     void processFinish(Integer output);
     void processFinish(ArrayList<Pet> output);
+    void processFinish(Bitmap output);
 }

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -41,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
     private ImageView background;
     private ArrayList<Pet> pets;
     private Integer connection_code;
+    private Bitmap downloaded_Bg;
+    private boolean connected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +58,11 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
                 public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                     if (key.equals("listPref")) {
                         Toast.makeText(getBaseContext(), "Preference changed", Toast.LENGTH_SHORT).show();
-                        setup();
+                        boolean success = setup();
+                        connected = success;
+                        if (success) {
+                            downloadPicture(0);
+                        }
                     }
                 }
             };
@@ -73,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                // your code here
+               if (connected) downloadPicture(position);
             }
 
             @Override
@@ -101,13 +108,23 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         } else {
             Log.e("Connection", "Connection");
             setup();
-
+            downloadPicture(0);
         }
 
 
 
     }
 
+    private void downloadPicture(int index_of_spinner) {
+        String url = prefs.getString("listPref","");
+        Log.e("DownloadPicture URL", url);
+        String[] parameters = {url,pets.get(index_of_spinner).file};
+        DownloadPhoto task = new DownloadPhoto();
+        task.resp = this;
+        task.execute(parameters);
+
+        this.background.setImageBitmap(downloaded_Bg);
+    }
     /**
      * Function sets up the field based on the preference set
      * @return true for successful setup, false otherwise
@@ -222,9 +239,12 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
     @Override
     public void processFinish(ArrayList<Pet> output) {
-
         for (Pet p : output) {
             pets.add(p);
         }
+    }
+    @Override
+    public void processFinish(Bitmap output) {
+        this.downloaded_Bg = output;
     }
 }
