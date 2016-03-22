@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
                 public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                     if (key.equals("listPref")) {
                         Toast.makeText(getBaseContext(), "Preference changed", Toast.LENGTH_SHORT).show();
+                        setup();
                     }
                 }
             };
@@ -69,6 +70,19 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         spinner = (Spinner)findViewById(R.id.imageSpinner);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                // your code here
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
 
         connection_code = -1;
         pets = new ArrayList<Pet>();
@@ -85,8 +99,9 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
             spinner.setSelection(0);
             Log.e("Connection", "No_Connection");
         } else {
-            Log.e("Connection","Connection");
-            //populate with default preference selection
+            Log.e("Connection", "Connection");
+            setup();
+
         }
 
 
@@ -95,10 +110,9 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
     /**
      * Function sets up the field based on the preference set
-     * @param view
      * @return true for successful setup, false otherwise
      */
-    private boolean setup(View view)  {
+    private boolean setup()  {
         String url = prefs.getString("listPref","");
         if (url.equals("")) return false; //shouldn't happen
 
