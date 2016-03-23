@@ -169,6 +169,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
             }
         } else {
             Log.e("PostExecute", "resp still null");
+            return false;
         }
 
         return true;
