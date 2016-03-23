@@ -108,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         } else {
             Log.e("Connection", "Connection");
             setup();
-            downloadPicture(0);
+            //downloadPicture(0);
         }
 
 
