@@ -52,6 +52,22 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
 
         background = (ImageView)findViewById(R.id.background);
+        spinner = (Spinner)findViewById(R.id.imageSpinner);
+        connected = false;
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if (connected) downloadPicture(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
 
         prefs = PreferenceManager.getDefaultSharedPreferences(this);
             listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -62,6 +78,13 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
                         connected = success;
                         if (success) {
                             downloadPicture(0);
+                        } else {
+                            background.setImageResource(R.drawable.nointernet);
+                               /*background.setScaleType(ImageView.ScaleType.FIT_XY);
+                                  Commented out until tool bar is fixed
+                                  */
+                            spinner.setPrompt("Default_No_Connection");
+                            spinner.setSelection(0);
                         }
                     }
                 }
@@ -76,19 +99,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         //Lets remove the title
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-        spinner = (Spinner)findViewById(R.id.imageSpinner);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-               if (connected) downloadPicture(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parentView) {
-                // your code here
-            }
-
-        });
 
 
         connection_code = -1;
@@ -140,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         if (checkConnection.resp != null) {
             if (connection_code == -1) {
                 Log.e("Connection_Code", "Still -1 something went wrong");
+                return false;
             } else {
                 if (connection_code != 200) {
                     Toast.makeText(this,"Error could not reach page code " + connection_code + " was given", Toast.LENGTH_SHORT).show();
@@ -152,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
                     if (pets.size() == 0) {
                         Log.e("Pets", "There are no pets???");
+                        return false;
                     } else {
                         String[] pet_names_array = new String[pets.size()];
                         int index = 0;
