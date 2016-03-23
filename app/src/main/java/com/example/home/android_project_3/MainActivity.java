@@ -30,6 +30,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.prefs.PreferenceChangeListener;
 
 public class MainActivity extends AppCompatActivity implements AsyncResponse{
@@ -117,8 +118,9 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
             Log.e("Connection", "No_Connection");
         } else {
             Log.e("Connection", "Connection");
+            Log.e("URL", prefs.getString("listPref",""));
             setup();
-            //downloadPicture(0);
+            downloadPicture(0);
         }
 
 
@@ -131,7 +133,13 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         String[] parameters = {url,pets.get(index_of_spinner).file};
         DownloadPhoto task = new DownloadPhoto();
         task.resp = this;
-        task.execute(parameters);
+        try {
+            task.execute(parameters).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         this.background.setImageBitmap(downloaded_Bg);
     }
@@ -145,7 +153,13 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
         ConnectionCheckTask checkConnection = new ConnectionCheckTask();
         checkConnection.resp = this;
-        checkConnection.execute(url);
+        try {
+            connection_code = checkConnection.execute(url).get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         if (checkConnection.resp != null) {
             if (connection_code == -1) {
@@ -159,7 +173,13 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
                     // connection is good
                     DownloadTask download = new DownloadTask();
                     download.resp = this;
-                    download.execute(url);
+                    try {
+                       pets = download.execute(url).get();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    }
 
                     if (pets.size() == 0) {
                         Log.e("Pets", "There are no pets???");
@@ -252,8 +272,12 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
     @Override
     public void processFinish(ArrayList<Pet> output) {
-        for (Pet p : output) {
-            pets.add(p);
+        if (output != null) {
+            if (!output.isEmpty()) {
+                for (Pet p : output) {
+                    pets.add(p);
+                }
+            }
         }
     }
     @Override

@@ -6,6 +6,6 @@
         android:title="Web Sites"
         android:entries="@array/JSON_URL_NAME"
         android:entryValues="@array/JSON_URL"
-        android:defaultValue="300"
+        android:defaultValue="http://www.tetonsoftware.com/pets/"
         />
 </PreferenceScreen>

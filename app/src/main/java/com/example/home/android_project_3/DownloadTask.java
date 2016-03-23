@@ -149,10 +149,10 @@ public class DownloadTask extends AsyncTask<String, Void, ArrayList<Pet>> {
         return pets;
     }
 
-    @Override
+    /*@Override
     protected void onPostExecute(ArrayList<Pet> result) {
         resp.processFinish(result);
-    }
+    }*/
 
     public static boolean saveProcessedImage(Bitmap bmp, String processedImagePath) {
         OutputStream outStream = null;

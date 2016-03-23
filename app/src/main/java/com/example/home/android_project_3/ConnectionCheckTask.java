@@ -21,9 +21,9 @@ public class ConnectionCheckTask extends AsyncTask<String, Void, Integer> {
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
-        HttpURLConnection connection = null;
+
         try {
-            connection = (HttpURLConnection) url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             code = connection.getResponseCode();
         } catch (IOException e) {
             e.printStackTrace();
