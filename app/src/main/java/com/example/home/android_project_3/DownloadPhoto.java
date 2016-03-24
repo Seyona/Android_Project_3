@@ -38,9 +38,9 @@ public class DownloadPhoto extends AsyncTask<String[], Void, Bitmap> {
         return null;
     }
 
-    @Override
-    protected void onPostExecute(Bitmap result) {
-        resp.processFinish(result);
-    }
+    //@Override
+    //protected void onPostExecute(Bitmap result) {
+      //  resp.processFinish(result);
+    //}
 
 }

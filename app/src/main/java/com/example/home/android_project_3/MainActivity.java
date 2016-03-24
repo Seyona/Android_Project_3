@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 if (connected) downloadPicture(position);
+                Log.e("Position",""+position);
             }
 
             @Override
@@ -87,6 +88,11 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
                                   Commented out until tool bar is fixed
                                   */
                             spinner.setPrompt("Pets");
+                            String[] s = {"No_connection"};
+                            adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_spinner_item,s);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            spinner.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
                             //spinner.setSelection(0);
                         }
                     }
@@ -144,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
            DownloadPhoto task = new DownloadPhoto();
            task.resp = this;
            try {
-               task.execute(parameters).get();
+               downloaded_Bg = task.execute(parameters).get();
            } catch (InterruptedException e) {
                e.printStackTrace();
            } catch (ExecutionException e) {
@@ -204,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
                         for (Pet p : pets) {
                             pet_names_array[index] = p.name;
                             Log.e("Pets", p.name);
+                            index++;
                         }
 
 
