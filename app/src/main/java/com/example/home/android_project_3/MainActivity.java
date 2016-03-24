@@ -118,8 +118,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
             Log.e("Connection", "No_Connection");
         } else {
             Log.e("Connection", "Connection");
-            Log.e("URL", prefs.getString("listPref",""));
-            setup();
+            Log.e("URL", prefs.getString("listPref", ""));
+            connected = setup();
             //downloadPicture(0);
         }
 
@@ -128,20 +128,25 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
     }
 
     private void downloadPicture(int index_of_spinner) {
-        String url = prefs.getString("listPref","");
-        Log.e("DownloadPicture URL", url);
-        String[] parameters = {url,pets.get(index_of_spinner).file};
-        DownloadPhoto task = new DownloadPhoto();
-        task.resp = this;
-        try {
-            task.execute(parameters).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+       if (connected) {
+           String url = prefs.getString("listPref","");
+           Log.e("DownloadPicture URL", url);
+           String[] parameters = {url,pets.get(index_of_spinner).file};
+           DownloadPhoto task = new DownloadPhoto();
+           task.resp = this;
+           try {
+               task.execute(parameters).get();
+           } catch (InterruptedException e) {
+               e.printStackTrace();
+           } catch (ExecutionException e) {
+               e.printStackTrace();
+           }
 
-        this.background.setImageBitmap(downloaded_Bg);
+           this.background.setImageBitmap(downloaded_Bg);
+       } else {
+           Log.e("downloadPicture","no connection");
+       }
+
     }
     /**
      * Function sets up the field based on the preference set
