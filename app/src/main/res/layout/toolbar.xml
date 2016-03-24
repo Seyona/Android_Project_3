@@ -4,5 +4,14 @@
     android:id="@+id/toolbar"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:elevation="4dp"
-    />
+    android:elevation="4dp">
+    <Spinner
+        android:id="@+id/iSpinner"
+        android:layout_width="125dp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/toolbar"
+        android:entries="@array/def">
+    </Spinner>
+
+    </android.support.v7.widget.Toolbar>
+

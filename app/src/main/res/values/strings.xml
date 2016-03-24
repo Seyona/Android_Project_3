@@ -12,6 +12,7 @@
         <item>http://www.pcs.cnu.edu/~kperkins/pets/</item>
         <item>http://www.tetonsoftware.com/pets/</item>
     </string-array>
+
     <string-array name="def">
         <item>no connection</item>
     </string-array>

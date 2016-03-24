@@ -100,9 +100,10 @@ public class DownloadTask extends AsyncTask<String, Void, ArrayList<Pet>> {
             JSONObject jObject  = new JSONObject(dat);
             JSONArray pet = jObject.getJSONArray("pets");
 
-            Pet temp_pet = new Pet("","");
+
 
             for(int i = 0; i < pet.length(); i++) {
+                Pet temp_pet = new Pet("","");
                 JSONObject pet_field = pet.getJSONObject(i);
                 temp_pet.name = pet_field.getString("name");
                     Log.e("Pet Name", temp_pet.name);
@@ -147,6 +148,11 @@ public class DownloadTask extends AsyncTask<String, Void, ArrayList<Pet>> {
 
         }*/
         return pets;
+    }
+
+    @Override
+    protected void onCancelled() {
+        super.onCancelled();
     }
 
     /*@Override

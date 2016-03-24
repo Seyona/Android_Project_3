@@ -45,6 +45,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
     private Integer connection_code;
     private Bitmap downloaded_Bg;
     private boolean connected;
+    private ArrayAdapter adapter;
+    String[] pet_names_array;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
 
 
         background = (ImageView)findViewById(R.id.background);
-        spinner = (Spinner)findViewById(R.id.imageSpinner);
+        spinner = (Spinner)findViewById(R.id.iSpinner);
         connected = false;
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -84,8 +86,8 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
                                /*background.setScaleType(ImageView.ScaleType.FIT_XY);
                                   Commented out until tool bar is fixed
                                   */
-                            spinner.setPrompt("Default_No_Connection");
-                            spinner.setSelection(0);
+                            spinner.setPrompt("Pets");
+                            //spinner.setSelection(0);
                         }
                     }
                 }
@@ -113,14 +115,21 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
             /*background.setScaleType(ImageView.ScaleType.FIT_XY);
                 Commented out until tool bar is fixed
             */
-            spinner.setPrompt("Default_No_Connection");
-            spinner.setSelection(0);
+            spinner.setPrompt("Pets");
+           // spinner.setSelection(0);
             Log.e("Connection", "No_Connection");
         } else {
             Log.e("Connection", "Connection");
             Log.e("URL", prefs.getString("listPref", ""));
             connected = setup();
-            //downloadPicture(0);
+            if (connected) {
+                downloadPicture(0);
+            } else {
+                background.setImageResource(R.drawable.nointernet);
+
+                spinner.setPrompt("Pets");
+                //spinner.setSelection(0);
+            }
         }
 
 
@@ -190,15 +199,18 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
                         Log.e("Pets", "There are no pets???");
                         return false;
                     } else {
-                        String[] pet_names_array = new String[pets.size()];
+                        pet_names_array = new String[pets.size()];
                         int index = 0;
                         for (Pet p : pets) {
                             pet_names_array[index] = p.name;
+                            Log.e("Pets", p.name);
                         }
 
-                        ArrayAdapter adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,pet_names_array);
+
+                        adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,pet_names_array);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         spinner.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
 
                     }
 
@@ -248,9 +260,9 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
                 return (exitValue == 0);
 
             } catch (IOException e) {
-                e.printStackTrace();
+               // e.printStackTrace();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         }
 
@@ -268,7 +280,6 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
-
 
     @Override
     public void processFinish(Integer output) {
