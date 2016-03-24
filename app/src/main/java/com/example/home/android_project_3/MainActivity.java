@@ -120,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements AsyncResponse{
             Log.e("Connection", "Connection");
             Log.e("URL", prefs.getString("listPref",""));
             setup();
-            downloadPicture(0);
+            //downloadPicture(0);
         }
 
 
