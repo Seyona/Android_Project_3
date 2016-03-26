@@ -1,3 +1,7 @@
+/**
+ * Created by David Baker, and Jake May
+ */
+
 package com.example.home.android_project_3;
 
 import android.app.ProgressDialog;
